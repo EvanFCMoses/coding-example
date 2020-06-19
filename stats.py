@@ -1,5 +1,8 @@
 import json
 from typing import Dict
+from src.messageboard.models import Message
+import statistics
+import json
 
 
 class MessageBoardAPIWrapper:
@@ -14,33 +17,80 @@ class MessageBoardAPIWrapper:
 
     def num_messages(self) -> int:
         """
-        Returns the total number of messages.
+        Returns the amount of messages in the database
         """
-        raise NotImplementedError
+        return len(Message.objects.get()); 
+
+    def create_word_frequency(self, allMessages):
+        """
+        Utility for getting map of word count in messages
+        """
+        wordCount = {}
+        for message in allMessages:
+            for word in message:
+                if word in wordCount:
+                    wordCount[word] = wordCount[word] + 1
+                else:
+                    wordCount[word] = 1
+        return wordCount
 
     def most_common_word(self) -> str:
         """
         Returns the most frequently used word in messages.
         """
-        raise NotImplementedError
+        wordCount = create_word_frequency(Message.objects.all())
+        return max(wordCount, key=wordCount.get)
 
     def avg_num_words_per_sentence(self) -> float:
         """
         Returns the average number of words per sentence.
         """
-        raise NotImplementedError
+        wordCount = create_word_frequency(Message.objects.all())
+        return mean(wordCount, key=wordCount.get)
 
     def avg_num_msg_thread_topic(self) -> Dict[str, float]:
         """
         Returns the average number of messages per thread, per topic.
         """
-        raise NotImplementedError
+        topicThreadAvgs = {}
+        for topic in Topic.objects.all():
+            topicThreadAvgs[topic.title] = 0
+            for thread in Thread.objects.filter(title=topic.title):
+                numberOfMessagesInThread = len(Message.objects.filter(title=thread.title))
+                topicThreadAvgs[thread.title]=numberOfMessagesInThread
+                topicThreadAvgs[topic.title]=topicAvgs[topic.title]+numberOfMessagesInThread
+
+        return 
 
     def _as_dict(self) -> dict:
         """
         Returns the entire messageboard as a nested dictionary.
         """
-        raise NotImplementedError
+        forumDict = {}
+        for topic in Topic.objects.all():
+            threadList = []
+            topicDict = {}
+            for thread in Thread.objects.filter(title=topic.title):
+                messagesList = []
+                threadDict = {}
+                for message in Message.objects.filter(thread=thread):
+                    messageDict = {}
+                    messageDict["content"] = message.content
+                    messageDict["author_name"] = message.author_name
+                    messageDict["created_date"] = message.created_date
+                    messagesList.append(messageDict)
+                threadDict["title"] = thread.title
+                threadDict["topic"] = thread.topic
+                threadDict["author_name"] = thread.author_name
+                threadDict["created_date"] = thread.created_date
+                threadDict["messages"] = messagesList
+                threadList.append(threadDict)
+            topicDict["title"] = topic.title
+            topicDict["slug"] = topic.slug
+            topicDict["threads"] = threadList
+            forumDict[topic.slug] = topicDict
+
+        return forumDict
 
     def to_json(self) -> None:
         """

@@ -1,0 +1,46 @@
+PostMortem
+
+most of the answers will be informed by me being unable to run the
+included stats.py file with the included makefile. I'm sure it
+falls down to my specific install, but the poetry command was not
+running through manage.py so the settings for the django project
+were never being set. This comes after trying to get the project
+set up inside the WSL which was unsuccessful because of the 
+default versions of python that are installed in that environment
+and the need to keep them installed for the environment to
+continue to function.
+
+1.
+I don't think that very many interesting design decisions can be 
+construed from what I did. I would like to say that I was
+following TDD, but I did not write any unit tests that I
+normally would have. I guess I followed DRY principles once(1)
+by writing a helper class in the stats.py, for whatever that's
+worth.
+
+2.
+I found the general structure of the project challenging. Not 
+being able to test the code I'm writing is very difficult to me
+and not having a lot of knowledge about Poetry made the 
+difficulties I had take longer to diagnose. I also have not worked
+with this version of django, so that was challenging, but fun to
+see some of the streamlining of features that they have made.
+
+3. 
+I think the decision I made to not complete all of the 
+requirements for this assignment is very interesting. I made
+that choice because of the large time commitment that it was 
+taking and the large amount of stress that I was under from other
+forces. 
+
+4.
+I would suggest testing how to set up this environment under
+multiple operating systems to make it more flexible to work on.
+
+
+Thank you for the time it will take to look through this, I 
+wish I had more time to complete more of it, and I wish it 
+wasn't such a miserable experience to try to get it working,
+but thank you for considering me all the same.
+
+Evan
